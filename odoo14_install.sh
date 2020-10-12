@@ -62,6 +62,7 @@ sudo add-apt-repository universe
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
+apt --fix-broken install -y
 
 #--------------------------------------------------
 # Install PostgreSQL Server
@@ -89,7 +90,7 @@ sudo npm install -g rtlcss
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 14 ----"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
@@ -110,7 +111,7 @@ sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' -
 sudo adduser $OE_USER sudo
 
 echo -e "\n---- Create Log directory ----"
-sudo mkdir -p "${OE_HOME}/${OE_USER}13/custom/log/"
+sudo mkdir -p "${OE_HOME}/${OE_USER}14/custom/log/"
 
 #--------------------------------------------------
 # Install ODOO
@@ -144,7 +145,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 fi
 
 echo -e "\n---- Create custom module directory ----"
-sudo mkdir -p "${OE_HOME}/${OE_USER}13/custom/addons"
+sudo mkdir -p "${OE_HOME}/${OE_USER}14/custom/addons"
 
 echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
@@ -174,8 +175,9 @@ else
 fi
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
-sudo mv /etc/${OE_CONFIG}.conf ${OE_HOME}/${OE_USER}13/custom/addons
+sudo mv /etc/${OE_CONFIG}.conf ${OE_HOME}/${OE_USER}14/custom/addons
 
+sudo pip3 install -r "${OE_HOME}/${OE_USER}14/odoo-server/requirements.txt" -i  https://mirrors.aliyun.com/pypi/simple/
 
 #--------------------------------------------------
 # Adding ODOO as a deamon (initscript)
