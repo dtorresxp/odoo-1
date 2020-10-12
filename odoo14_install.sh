@@ -7,16 +7,16 @@
 # in one Ubuntu because of the different xmlrpc_ports
 #-------------------------------------------------------------------------------
 # Make a new file:
-# sudo vim odoo13_install.sh
+# sudo vim odoo14_install.sh
 # Place this content in it and then make the file executable:
-# sudo chmod +x odoo13_install.sh
+# sudo chmod +x odoo14_install.sh
 # Execute the script to install Odoo:
-# sudo ./odoo13_install.sh 2> odoo13_install_err.log
+# sudo ./odoo14_install.sh 2> odoo14_install_err.log
 ################################################################################
 
 OE_USER="odoo"
 OE_HOME="/opt/odoo"
-OE_HOME_EXT="${OE_HOME}/${OE_USER}13/${OE_USER}-server"
+OE_HOME_EXT="${OE_HOME}/${OE_USER}14/${OE_USER}-server"
 # The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 # Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="False"
@@ -24,7 +24,7 @@ INSTALL_WKHTMLTOPDF="False"
 OE_PORT="8869"
 # Choose the Odoo version which you want to install. For example: 13.0, 12.0, 11.0 or saas-18. When using 'master' the master version will be installed.
 # IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 13.0
-OE_VERSION="13.0"
+OE_VERSION="14.0"
 # Set this to True if you want to install the Odoo enterprise version!
 IS_ENTERPRISE="False"
 # Set this to True if you want to install Nginx!
@@ -33,11 +33,11 @@ INSTALL_NGINX="False"
 OE_SUPERADMIN="admin"
 # Set to "True" to generate a random password, "False" to use the variable in OE_SUPERADMIN
 GENERATE_RANDOM_PASSWORD="True"
-OE_CONFIG="${OE_USER}-server13"
+OE_CONFIG="${OE_USER}-server14"
 # Set the website name
 WEBSITE_NAME="_"
 # Set the default Odoo longpolling port (you still have to use -c /etc/odoo-server.conf for example to use this.)
-# LONGPOLLING_PORT="8072"
+LONGPOLLING_PORT="8072"
 # Set to "True" to install certbot and have ssl enabled, "False" to use http
 ENABLE_SSL="False"
 # Provide Email to register ssl certificate
@@ -55,8 +55,8 @@ WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
-sudo apt-get install software-properties-common
 # universe package is for Ubuntu 18.x
+sudo apt-get install software-properties-common
 sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
@@ -165,7 +165,7 @@ if [ $OE_VERSION > "11.0" ];then
 else
     sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
 fi
-su root -c "printf 'logfile = ${OE_HOME}/${OE_USER}13/custom/log/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
+su root -c "printf 'logfile = ${OE_HOME}/${OE_USER}14/custom/log/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
 
 if [ $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "printf 'addons_path=${OE_HOME}/enterprise/addons,${OE_HOME_EXT}/addons\n' >> /etc/${OE_CONFIG}.conf"
@@ -175,6 +175,7 @@ fi
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
 sudo mv /etc/${OE_CONFIG}.conf ${OE_HOME}/${OE_USER}13/custom/addons
+
 
 #--------------------------------------------------
 # Adding ODOO as a deamon (initscript)
@@ -201,7 +202,7 @@ DESC=$OE_CONFIG
 # Specify the user name (Default: odoo).
 USER=$OE_USER
 # Specify an alternate config file (Default: /etc/openerp-server.conf).
-CONFIGFILE="${OE_HOME}/${OE_USER}13/custom/addons/${OE_CONFIG}.conf"
+CONFIGFILE="${OE_HOME}/${OE_USER}14/custom/addons/${OE_CONFIG}.conf"
 # pidfile
 PIDFILE=/var/run/\${NAME}.pid
 # Additional options that are passed to the Daemon.
@@ -368,7 +369,7 @@ echo "Configuraton file location: /etc/${OE_CONFIG}.conf"
 echo "Logfile location: /var/log/$OE_USER"
 echo "User PostgreSQL: $OE_USER"
 echo "Code location: $OE_USER"
-echo "Addons folder: ${OE_HOME}/${OE_USER}13/custom/addons/"
+echo "Addons folder: ${OE_HOME}/${OE_USER}14/custom/addons/"
 echo "Password superadmin (database): $OE_SUPERADMIN"
 echo "Start Odoo service: sudo systemctl start $OE_CONFIG"
 echo "Stop Odoo service: sudo systemctl stop $OE_CONFIG"
